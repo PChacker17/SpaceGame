@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SPACE — Learning Adventure</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+    :root { color-scheme: dark; --ink: #f7f9ff; --muted:#a3b0d3; --line:rgba(207,223,255,.18); }
+    *{box-sizing:border-box} html,body{height:100%;margin:0} body{font-family:'DM Sans',system-ui,sans-serif;color:var(--ink);overflow:hidden;background:#070d24}
+    .scene{position:relative;isolation:isolate;min-height:100svh;display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse at 73% 64%,#1b2658 0%,transparent 38%),radial-gradient(ellipse at 22% 18%,#1b1b4d 0%,transparent 43%),linear-gradient(145deg,#060a1c,#0b1433 65%,#070b20)}
+    .stars,.stars:before,.stars:after{position:absolute;inset:0;pointer-events:none;background-repeat:repeat;content:""}
+    .stars{z-index:-3;background-image:radial-gradient(1px 1px at 30px 40px,#e9f3ff 99%,transparent),radial-gradient(1px 1px at 140px 80px,#aebcfb 99%,transparent);background-size:187px 163px,251px 211px;opacity:.72}
+    .stars:before{background-image:radial-gradient(2px 2px at 60px 80px,#fff 99%,transparent),radial-gradient(1px 1px at 130px 130px,#fff 99%,transparent);background-size:303px 257px,207px 273px;animation:twinkle 5s ease-in-out infinite alternate}
+    .stars:after{background-image:radial-gradient(1px 1px at 30px 55px,#bcb9ff 99%,transparent);background-size:119px 181px;opacity:.55;transform:rotate(5deg) scale(1.1)}
+    .orbit{position:absolute;width:min(105vw,1120px);height:min(105vw,1120px);border:1px solid rgba(152,172,247,.08);border-radius:50%;z-index:-1;transform:rotate(-22deg) scaleY(.57);pointer-events:none}
+    .planet{position:absolute;border-radius:50%;pointer-events:none;box-shadow:inset -28px -16px 35px rgba(5,10,36,.54),0 0 65px rgba(96,115,254,.14);z-index:-2}
+    .planet.big{width:260px;height:260px;right:-94px;bottom:-64px;background:radial-gradient(circle at 30% 26%,#9c93fa,#5149b6 48%,#20245c 85%)}
+    .planet.big:after{content:"";position:absolute;inset:43% -36%;border:21px solid rgba(168,165,255,.45);border-top-color:rgba(189,186,255,.85);border-radius:50%;transform:rotate(-25deg) scaleY(.34)}
+    .planet.small{width:74px;height:74px;left:12%;top:14%;background:radial-gradient(circle at 30% 25%,#92e9e9,#4a87bc 60%,#234265)}
+    .spark{position:absolute;color:#c9d9ff;opacity:.7;font-size:18px;animation:twinkle 3s ease-in-out infinite alternate}.s1{top:24%;left:28%}.s2{right:25%;top:19%;animation-delay:1s}.s3{left:20%;bottom:22%;animation-delay:2s}
+    .astronaut{position:absolute;width:clamp(90px,11vw,158px);filter:drop-shadow(0 20px 24px rgba(0,0,0,.24));pointer-events:none;z-index:1;animation:float 6s ease-in-out infinite}
+    .astronaut.left{left:clamp(1%,8vw,12%);top:37%;transform:rotate(-18deg);animation-name:float-left}
+    .astronaut.right{right:clamp(1%,8vw,12%);top:18%;width:clamp(78px,9vw,127px);animation-name:float-right;animation-delay:-2.6s}
+    .astronaut svg{width:100%;height:auto;display:block}
+    .card{position:relative;z-index:3;width:min(90vw,440px);padding:42px 40px 35px;text-align:center;background:linear-gradient(155deg,rgba(29,40,83,.68),rgba(15,23,56,.67));border:1px solid rgba(196,213,255,.2);border-radius:30px;box-shadow:0 24px 85px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.08);backdrop-filter:blur(20px)}
+    .eyebrow{display:inline-flex;gap:8px;align-items:center;padding:7px 12px;border:1px solid rgba(181,194,255,.2);border-radius:50px;background:rgba(155,174,255,.07);font-size:10px;font-weight:700;letter-spacing:2.4px;color:#b9caff}
+    h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(56px,7vw,80px);line-height:1;margin:20px 0 7px;letter-spacing:-5px;font-weight:700}h1 sup{font-size:.46em;vertical-align:super;position:relative;top:-.13em;letter-spacing:0;color:#8ce8eb}
+    .sub{color:#bec8e5;font-size:14px;margin:0 0 31px;letter-spacing:.2px}
+    .buttons{display:grid;gap:11px}.btn{border:1px solid var(--line);border-radius:14px;padding:14px 18px;color:#f5f7ff;font:700 14px 'DM Sans',sans-serif;background:rgba(244,248,255,.06);cursor:pointer;display:flex;justify-content:center;gap:12px;align-items:center;transition:transform .2s,background .2s,box-shadow .2s}.btn:hover{transform:translateY(-2px);background:rgba(244,248,255,.13)}.btn.primary{color:#101d3c;background:linear-gradient(100deg,#92edf0,#a8b8ff);border:0;box-shadow:0 8px 26px rgba(126,185,245,.2);font-size:15px}.btn.primary:hover{box-shadow:0 10px 35px rgba(126,185,245,.38)}.btn svg{width:17px;height:17px}
+    .foot{font-size:10px;letter-spacing:2px;color:#7182ac;margin-top:30px;font-weight:700}
+    .topline{position:absolute;top:28px;left:34px;right:34px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:12px;letter-spacing:2px;color:#b3c3e5}.topline span:last-child{letter-spacing:.7px;font-size:11px;color:#7e92c4;font-weight:600}
+    .modal{position:fixed;inset:0;z-index:10;display:none;place-items:center;padding:20px;background:rgba(3,7,22,.68);backdrop-filter:blur(8px)}.modal.show{display:grid}.modal-box{width:min(100%,390px);background:#152044;border:1px solid #3c4c7d;border-radius:22px;padding:26px;text-align:center;box-shadow:0 30px 90px #0007}.modal-box h2{margin:3px 0 12px;font-family:'Space Grotesk',sans-serif}.modal-box p{color:#b8c7e8;line-height:1.6}.modal-box .btn{width:100%;margin-top:17px}.levels{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}.levels button{height:64px;background:#23335d;color:#fff;border:1px solid #435b90;border-radius:14px;font-weight:700;cursor:pointer}.levels button:hover{background:#405791}.levels button:disabled{opacity:.4;cursor:not-allowed}
+    @keyframes twinkle{from{opacity:.3}to{opacity:.95}}@keyframes float{50%{translate:0 -18px}}@keyframes float-left{0%,100%{transform:rotate(-18deg) translateY(0)}50%{transform:rotate(-10deg) translateY(-22px)}}@keyframes float-right{0%,100%{transform:rotate(17deg) translateY(0)}50%{transform:rotate(28deg) translateY(24px)}}
+    @media(max-width:650px){.card{padding:37px 27px 30px}.astronaut.left{top:73%;left:-15px;width:95px;opacity:.88}.astronaut.right{top:8%;right:-12px;width:85px}.planet.small{top:8%;left:10%;width:48px;height:48px}.planet.big{width:190px;height:190px;right:-100px}.topline{top:20px;left:20px;right:20px}.sub{margin-bottom:26px}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <main class="scene">
+    <div class="stars"></div><div class="orbit"></div><div class="planet small"></div><div class="planet big"></div>
+    <span class="spark s1">✦</span><span class="spark s2">✧</span><span class="spark s3">✦</span>
+    <header class="topline"><span>✦ SPACE ACADEMY</span><span>EXPLORE • LEARN • PLAY</span></header>
+    <!-- Self-contained SVG astronaut: no image downloads required -->
+    <div class="astronaut left" aria-hidden="true"><svg viewBox="0 0 160 180" xmlns="http://www.w3.org/2000/svg"><g stroke="#d5e6ff" stroke-width="3" stroke-linejoin="round"><path d="M49 99 22 114 10 99 22 88 52 76M110 99l27 15 13-15-13-12-28-12" fill="#e8f2ff"/><path d="M57 131 45 158 65 168 82 144M101 130l11 31-21 7-15-24" fill="#d7e8ff"/><rect x="42" y="67" width="77" height="77" rx="31" fill="#f2f7ff"/><rect x="59" y="89" width="43" height="35" rx="10" fill="#99bbf1"/><rect x="68" y="98" width="25" height="16" rx="4" fill="#314b85"/><circle cx="80" cy="50" r="43" fill="#f4f8ff"/><path d="M49 43Q51 16 80 16t31 27v12Q109 76 80 76T49 55Z" fill="#1f376b"/><path d="M59 30q12-13 33-8" stroke="#9eebff" stroke-width="7" stroke-linecap="round" fill="none"/><rect x="110" y="44" width="12" height="23" rx="5" fill="#9eb5df"/><rect x="38" y="44" width="12" height="23" rx="5" fill="#9eb5df"/><path d="M21 113l-6 10 18 9 8-13M136 114l8 10-18 9-8-14" fill="#a8bdf2"/></g><circle cx="80" cy="105" r="5" fill="#88e6e8"/></svg></div>
+    <div class="astronaut right" aria-hidden="true"><svg viewBox="0 0 160 180" xmlns="http://www.w3.org/2000/svg"><g stroke="#d5e6ff" stroke-width="3" stroke-linejoin="round"><path d="M49 99 22 114 10 99 22 88 52 76M110 99l27 15 13-15-13-12-28-12" fill="#e8f2ff"/><path d="M57 131 45 158 65 168 82 144M101 130l11 31-21 7-15-24" fill="#d7e8ff"/><rect x="42" y="67" width="77" height="77" rx="31" fill="#f2f7ff"/><rect x="59" y="89" width="43" height="35" rx="10" fill="#bdabfa"/><rect x="68" y="98" width="25" height="16" rx="4" fill="#55458c"/><circle cx="80" cy="50" r="43" fill="#f4f8ff"/><path d="M49 43Q51 16 80 16t31 27v12Q109 76 80 76T49 55Z" fill="#2a2e69"/><path d="M59 30q12-13 33-8" stroke="#cebcff" stroke-width="7" stroke-linecap="round" fill="none"/><rect x="110" y="44" width="12" height="23" rx="5" fill="#9eb5df"/><rect x="38" y="44" width="12" height="23" rx="5" fill="#9eb5df"/><path d="M21 113l-6 10 18 9 8-13M136 114l8 10-18 9-8-14" fill="#a8bdf2"/></g><circle cx="80" cy="105" r="5" fill="#e3aaff"/></svg></div>
+    <section class="card" aria-label="Game main menu">
+      <div class="eyebrow">✦ &nbsp; YOUR LEARNING UNIVERSE</div>
+      <h1>SPACE<sup>3</sup></h1>
+      <p class="sub">Big adventures. Brilliant discoveries.</p>
+      <nav class="buttons" aria-label="Main menu">
+        <button class="btn primary" onclick="openPanel('play')"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M6 3.5a1 1 0 0 1 1.5-.86l10 6.5a1 1 0 0 1 0 1.72l-10 6.5A1 1 0 0 1 6 16.5z"/></svg>Start Exploring</button>
+        <button class="btn" onclick="openPanel('levels')">✧ &nbsp; Choose a Level</button>
+        <button class="btn" onclick="openPanel('settings')">⚙ &nbsp; Settings</button>
+      </nav>
+      <div class="foot">THE UNIVERSE IS YOUR CLASSROOM</div>
+    </section>
+  </main>
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" onclick="if(event.target===this)closePanel()"><div class="modal-box"><h2 id="modal-title"></h2><div id="modal-content"></div><button class="btn" onclick="closePanel()">← Back to menu</button></div></div>
+  <script>
+    function openPanel(panel){
+      const title=document.getElementById('modal-title'),content=document.getElementById('modal-content');
+      if(panel==='play'){title.textContent='You cant play the game.';content.innerHTML='<p>BECUASE THERE IS NO GAME EITHAN!</p>'}
+      if(panel==='levels'){title.textContent='Choose a Mission';content.innerHTML='<div class="levels"><button onclick="openPanel(\'play\')">🌎<br>Earth</button><button onclick="openPanel(\'play\')">🌙<br>Moon</button><button onclick="openPanel(\'play\')">🪐<br>Planets</button></div>'}
+      if(panel==='settings'){title.textContent='Settings';content.innerHTML='<p><label><input type="checkbox" id="motion" checked onchange="document.querySelectorAll(\'.astronaut\').forEach(a=>a.style.animationPlayState=this.checked?\'running\':\'paused\')"> Floating astronauts</label></p>'}
+      document.getElementById('modal').classList.add('show');
+    }
+    function closePanel(){document.getElementById('modal').classList.remove('show')}
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')closePanel()});
+  </script>
+</body>
+</html>
